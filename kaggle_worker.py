@@ -129,7 +129,15 @@ def execute_job(repo: Path, branch: str, job: dict[str, Any], work_root: Path, c
 
     log_handle = (work_dir / "worker.log").open("a", encoding="utf-8", buffering=1)
     try:
-        process = subprocess.Popen(command, cwd=repo, stdout=log_handle, stderr=subprocess.STDOUT, env=os.environ.copy())
+        job_env = os.environ.copy()
+        job_env.pop("GITHUB_TOKEN", None)
+        process = subprocess.Popen(
+            command,
+            cwd=repo,
+            stdout=log_handle,
+            stderr=subprocess.STDOUT,
+            env=job_env,
+        )
         interval = max(1, checkpoint_minutes) * 60
         next_checkpoint = time.monotonic() + interval
         while process.poll() is None:
