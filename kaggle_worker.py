@@ -109,7 +109,13 @@ def execute_job(repo: Path, branch: str, job: dict[str, Any], work_root: Path, c
     source_sha = run_git(repo, ["rev-parse", "HEAD"]).stdout.strip()
     work_dir = work_root / job_id
     result_dir = repo / "results" / job_id
-    work_dir.mkdir(parents=True, exist_ok=True)
+    # A new Kaggle session has an empty work disk but the Git repository may
+    # contain a checkpoint from an earlier session. Seed the live work tree
+    # from that checkpoint so JSONL question-level progress is resumed.
+    if not work_dir.exists() and result_dir.exists():
+        shutil.copytree(result_dir, work_dir)
+    else:
+        work_dir.mkdir(parents=True, exist_ok=True)
 
     command = [part.replace("{output_dir}", str(work_dir)) for part in job["command"]]
     metadata = {
