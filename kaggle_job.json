@@ -1,0 +1,13 @@
+{
+  "job_id": "2026-08-08-pilot-v1",
+  "enabled": true,
+  "command": [
+    "python",
+    "-u",
+    "experiments/run_dual_gpu.py",
+    "--config",
+    "configs/pilot.json",
+    "--output-dir",
+    "{output_dir}"
+  ]
+}

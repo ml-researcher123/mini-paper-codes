@@ -1,0 +1,16 @@
+{
+  "models": [
+    "Qwen/Qwen2.5-3B-Instruct",
+    "microsoft/Phi-3.5-mini-instruct"
+  ],
+  "precisions": ["fp16", "nf4"],
+  "datasets": [
+    {"name": "truthful_qa_mc1", "limit": 300},
+    {"name": "gsm8k", "limit": 300}
+  ],
+  "panel_size": 5,
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "max_new_tokens": 80,
+  "base_seed": 20260808
+}
