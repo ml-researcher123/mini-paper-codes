@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python",
+    "-u",
+    "experiments/run_dual_gpu.py",
+    "--config",
+    "configs/missing.json",
+    "--output-dir",
+    "/kaggle/working/mini-paper-codes/.worker_work/2026-08-08-missing-v1"
+  ],
+  "job_id": "2026-08-08-missing-v1",
+  "source_sha": "11f8834c9eb828c6de900c97250aba6fc8d0eef1",
+  "started_at": "2026-08-08T09:34:46.999526+00:00",
+  "status": "running"
+}

@@ -1,0 +1,49 @@
+{
+  "base_seed": 20260808,
+  "conditions": [
+    {
+      "dataset": {
+        "limit": 300,
+        "name": "truthful_qa_mc1"
+      },
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "precision": "nf4"
+    },
+    {
+      "dataset": {
+        "limit": 300,
+        "name": "truthful_qa_mc1"
+      },
+      "model": "microsoft/Phi-3.5-mini-instruct",
+      "precision": "fp16"
+    },
+    {
+      "dataset": {
+        "limit": 300,
+        "name": "gsm8k"
+      },
+      "model": "microsoft/Phi-3.5-mini-instruct",
+      "precision": "fp16"
+    },
+    {
+      "dataset": {
+        "limit": 300,
+        "name": "truthful_qa_mc1"
+      },
+      "model": "microsoft/Phi-3.5-mini-instruct",
+      "precision": "nf4"
+    },
+    {
+      "dataset": {
+        "limit": 300,
+        "name": "gsm8k"
+      },
+      "model": "microsoft/Phi-3.5-mini-instruct",
+      "precision": "nf4"
+    }
+  ],
+  "max_new_tokens": 80,
+  "panel_size": 5,
+  "temperature": 0.7,
+  "top_p": 0.9
+}
