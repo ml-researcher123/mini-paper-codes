@@ -1,12 +1,12 @@
 {
-  "job_id": "2026-08-08-phi-v2",
-  "enabled": false,
+  "job_id": "2026-08-09-corrected-v3",
+  "enabled": true,
   "command": [
     "python",
     "-u",
     "experiments/run_dual_gpu.py",
     "--config",
-    "configs/phi.json",
+    "configs/corrected.json",
     "--output-dir",
     "{output_dir}"
   ]

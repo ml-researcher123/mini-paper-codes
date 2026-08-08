@@ -49,7 +49,11 @@ def load_examples(name: str, limit: int) -> list[dict[str, Any]]:
             examples.append(
                 {
                     "id": f"truthful_qa_mc1-{index}",
-                    "prompt": f"Answer the multiple-choice question. End with FINAL: <letter>.\n\n{row['question']}\n{options}",
+                    "prompt": (
+                        "Answer the multiple-choice question by returning only the single option letter. "
+                        "Do not explain your answer.\n\n"
+                        f"{row['question']}\n{options}"
+                    ),
                     "gold": answer,
                     "kind": "mc",
                     "num_choices": len(choices),
@@ -64,7 +68,11 @@ def load_examples(name: str, limit: int) -> list[dict[str, Any]]:
             examples.append(
                 {
                     "id": f"gsm8k-{index}",
-                    "prompt": f"Solve the problem briefly. End with FINAL: <number>.\n\n{row['question']}",
+                    "prompt": (
+                        "Solve the problem step by step. End with exactly FINAL: <number>. "
+                        "The final marker is required.\n\n"
+                        f"{row['question']}"
+                    ),
                     "gold": gold,
                     "kind": "number",
                 }
@@ -92,8 +100,16 @@ def extract_answer(text: str, example: dict[str, Any]) -> str | None:
             return None
         answer = match.group(1)
         return answer if ord(answer) - 65 < example["num_choices"] else None
-    final = text.rsplit("FINAL:", 1)[-1].strip() if "FINAL:" in text else text
-    return normalize_number(final)
+    # Never score the last intermediate number from a truncated derivation as
+    # the final answer. A free-response vote is valid only with an explicit
+    # final-answer marker.
+    final_matches = list(
+        re.finditer(
+            r"(?i)\bfinal\s*(?:answer)?\s*(?::|is)\s*([-+]?\d[\d,]*(?:\.\d+)?)",
+            text,
+        )
+    )
+    return normalize_number(final_matches[-1].group(1)) if final_matches else None
 
 
 def load_model(model_name: str, precision: str):
@@ -206,7 +222,8 @@ def run_condition(model_name: str, precision: str, dataset_spec: dict[str, Any],
                 random.seed(seed)
                 np.random.seed(seed)
                 torch.manual_seed(seed)
-                text = generate_one(tokenizer, model, example["prompt"], seed, config)
+                generation_config = {**config, **dataset_spec}
+                text = generate_one(tokenizer, model, example["prompt"], seed, generation_config)
                 answer = extract_answer(text, example)
                 samples.append({"member": member, "seed": seed, "answer": answer, "correct": answer == example["gold"], "text": text})
             row = {"id": example["id"], "gold": example["gold"], "samples": samples}
