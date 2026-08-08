@@ -13,5 +13,20 @@
     "questions": 300,
     "same_wrong_all_rate": 0.4633333333333333,
     "same_wrong_count": 139
+  },
+  {
+    "agreement_brier": 0.5321333333333332,
+    "beta_all_agents_wrong": 0.5533333333333333,
+    "cofailure_count": 166,
+    "condition": "microsoft_Phi-3.5-mini-instruct__nf4__truthful_qa_mc1",
+    "dataset": "truthful_qa_mc1",
+    "individual_accuracy": 0.43,
+    "kappa_same_wrong_given_all_wrong": 0.8795180722891566,
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "panel_accuracy": 0.43,
+    "precision": "nf4",
+    "questions": 300,
+    "same_wrong_all_rate": 0.4866666666666667,
+    "same_wrong_count": 146
   }
 ]
