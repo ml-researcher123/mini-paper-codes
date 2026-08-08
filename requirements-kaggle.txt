@@ -4,4 +4,6 @@ datasets>=2.20,<5
 numpy>=1.26,<3
 sentencepiece>=0.2,<1
 torch>=2.3
-transformers>=4.43,<5
+# Phi-3.5's remote modeling code relies on DynamicCache.seen_tokens, which was
+# removed by later Transformers releases.
+transformers==4.43.4

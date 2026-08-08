@@ -47,6 +47,17 @@ def sync_from_remote(repo: Path, branch: str) -> None:
     run_git(repo, ["merge", "--ff-only", f"origin/{branch}"])
 
 
+def push_pending_commits(repo: Path, branch: str, no_push: bool) -> None:
+    """Retry locally committed results that a transient network failure stranded."""
+    if no_push:
+        return
+    ahead = int(run_git(repo, ["rev-list", "--count", f"origin/{branch}..HEAD"]).stdout.strip())
+    if ahead:
+        pushed = run_git(repo, ["push", "origin", f"HEAD:{branch}"], auth=True, check=False)
+        if pushed.returncode != 0:
+            raise RuntimeError(f"Could not push {ahead} pending commit(s):\n{pushed.stderr}")
+
+
 def load_json(path: Path, default: Any) -> Any:
     if not path.exists():
         return default
@@ -116,6 +127,13 @@ def execute_job(repo: Path, branch: str, job: dict[str, Any], work_root: Path, c
         shutil.copytree(result_dir, work_dir)
     else:
         work_dir.mkdir(parents=True, exist_ok=True)
+    resume_from = job.get("resume_from_job")
+    if resume_from and not any(work_dir.glob("*.jsonl")):
+        source_dir = repo / "results" / resume_from
+        if not source_dir.is_dir():
+            raise FileNotFoundError(f"Resume source does not exist: {source_dir}")
+        for source_file in source_dir.glob("*.jsonl"):
+            shutil.copy2(source_file, work_dir / source_file.name)
 
     command = [part.replace("{output_dir}", str(work_dir)) for part in job["command"]]
     metadata = {
@@ -194,6 +212,7 @@ def main() -> None:
     while True:
         try:
             sync_from_remote(repo, args.branch)
+            push_pending_commits(repo, args.branch, args.no_push)
             job = load_json(repo / "kaggle_job.json", {})
             if job.get("enabled", False):
                 validate_job(job)

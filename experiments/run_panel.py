@@ -220,19 +220,27 @@ def main() -> None:
     summary_path = args.output_dir / summary_name
     summaries = load_json(summary_path, []) if summary_path.exists() else []
     finished = {item["condition"] for item in summaries}
-    condition_index = -1
-    for model_name in config["models"]:
-        for precision in config["precisions"]:
-            for dataset_spec in config["datasets"]:
-                condition_index += 1
-                if condition_index % args.num_shards != args.shard_index:
-                    continue
-                condition = f"{safe_name(model_name)}__{precision}__{dataset_spec['name']}"
-                if condition in finished:
-                    continue
-                result = run_condition(model_name, precision, dataset_spec, config, args.output_dir)
-                summaries.append(result)
-                atomic_json(summary_path, summaries)
+    if "conditions" in config:
+        conditions = config["conditions"]
+    else:
+        conditions = [
+            {"model": model, "precision": precision, "dataset": dataset}
+            for model in config["models"]
+            for precision in config["precisions"]
+            for dataset in config["datasets"]
+        ]
+    for condition_index, specification in enumerate(conditions):
+        if condition_index % args.num_shards != args.shard_index:
+            continue
+        model_name = specification["model"]
+        precision = specification["precision"]
+        dataset_spec = specification["dataset"]
+        condition = f"{safe_name(model_name)}__{precision}__{dataset_spec['name']}"
+        if condition in finished:
+            continue
+        result = run_condition(model_name, precision, dataset_spec, config, args.output_dir)
+        summaries.append(result)
+        atomic_json(summary_path, summaries)
 
 
 def load_json(path: Path, default: Any) -> Any:

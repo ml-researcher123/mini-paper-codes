@@ -1,12 +1,13 @@
 {
-  "job_id": "2026-08-08-gsm8k-v1",
+  "job_id": "2026-08-08-missing-v1",
   "enabled": true,
+  "resume_from_job": "2026-08-08-pilot-v1",
   "command": [
     "python",
     "-u",
     "experiments/run_dual_gpu.py",
     "--config",
-    "configs/gsm8k.json",
+    "configs/missing.json",
     "--output-dir",
     "{output_dir}"
   ]
