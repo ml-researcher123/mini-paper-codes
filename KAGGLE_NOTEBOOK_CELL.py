@@ -21,6 +21,13 @@ if not (CHECKOUT / ".git").exists():
         ["git", "clone", "--branch", BRANCH, REPOSITORY, str(CHECKOUT)],
         check=True,
     )
+else:
+    # Pull dependency pins and job changes before installing requirements.
+    subprocess.run(
+        ["git", "pull", "--ff-only", "origin", BRANCH],
+        cwd=CHECKOUT,
+        check=True,
+    )
 
 subprocess.run(
     [sys.executable, "-m", "pip", "install", "-q", "-r", str(CHECKOUT / "requirements-kaggle.txt")],
