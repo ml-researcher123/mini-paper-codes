@@ -1,0 +1,17 @@
+[
+  {
+    "agreement_brier": 0.24906666666666666,
+    "beta_all_agents_wrong": 0.6533333333333333,
+    "cofailure_count": 196,
+    "condition": "Qwen_Qwen2.5-3B-Instruct__fp16__gsm8k",
+    "dataset": "gsm8k",
+    "individual_accuracy": 0.21066666666666667,
+    "kappa_same_wrong_given_all_wrong": 0.05102040816326531,
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "panel_accuracy": 0.24333333333333335,
+    "precision": "fp16",
+    "questions": 300,
+    "same_wrong_all_rate": 0.03333333333333333,
+    "same_wrong_count": 10
+  }
+]
