@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python",
+    "-u",
+    "experiments/run_dual_gpu.py",
+    "--config",
+    "configs/gsm8k.json",
+    "--output-dir",
+    "/kaggle/working/mini-paper-codes/.worker_work/2026-08-08-gsm8k-v1"
+  ],
+  "job_id": "2026-08-08-gsm8k-v1",
+  "source_sha": "f91fbe5b18dc6d0b50940ac38ec53876c2402760",
+  "started_at": "2026-08-08T07:10:57.306079+00:00",
+  "status": "running"
+}

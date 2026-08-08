@@ -1,0 +1,7 @@
+Generating train split:   0%|          | 0/7473 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 7473/7473 [00:00<00:00, 132886.34 examples/s]
+Generating test split:   0%|          | 0/1319 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 1319/1319 [00:00<00:00, 266359.51 examples/s]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:21<00:21, 21.91s/it]Fetching 2 files: 100%|██████████| 2/2 [00:21<00:00, 10.95s/it]
+Fetching 2 files:  50%|█████     | 1/2 [00:16<00:16, 16.51s/it]Fetching 2 files: 100%|██████████| 2/2 [00:16<00:00,  8.25s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.38s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.01s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.06s/it]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:05<00:05,  5.87s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:09<00:00,  4.55s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:09<00:00,  4.75s/it]

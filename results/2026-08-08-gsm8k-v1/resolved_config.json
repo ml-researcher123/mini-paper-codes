@@ -1,0 +1,21 @@
+{
+  "base_seed": 20260808,
+  "datasets": [
+    {
+      "limit": 300,
+      "name": "gsm8k"
+    }
+  ],
+  "max_new_tokens": 80,
+  "models": [
+    "Qwen/Qwen2.5-3B-Instruct",
+    "microsoft/Phi-3.5-mini-instruct"
+  ],
+  "panel_size": 5,
+  "precisions": [
+    "fp16",
+    "nf4"
+  ],
+  "temperature": 0.7,
+  "top_p": 0.9
+}
