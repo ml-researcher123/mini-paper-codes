@@ -1,0 +1,17 @@
+[
+  {
+    "agreement_brier": 0.35159999999999997,
+    "beta_all_agents_wrong": 0.37333333333333335,
+    "cofailure_count": 112,
+    "condition": "Qwen_Qwen2.5-3B-Instruct__nf4__truthful_qa_mc1",
+    "dataset": "truthful_qa_mc1",
+    "individual_accuracy": 0.488,
+    "kappa_same_wrong_given_all_wrong": 0.5982142857142857,
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "panel_accuracy": 0.5366666666666666,
+    "precision": "nf4",
+    "questions": 300,
+    "same_wrong_all_rate": 0.22333333333333333,
+    "same_wrong_count": 67
+  }
+]
