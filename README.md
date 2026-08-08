@@ -50,3 +50,17 @@ machine-readable summary. It resumes completed conditions after interruption.
 The initial TruthfulQA run exposed and preserved a useful one-shard checkpoint;
 `2026-08-08-gsm8k-v1` is queued next so the repaired two-GPU runner covers the
 missing free-response conditions without repeating those completed MC results.
+
+## Statistical analysis
+
+After all eight conditions are present, run:
+
+```bash
+python analysis/analyze_results.py
+```
+
+This discovers the complete condition files, computes paired question-level
+bootstrap intervals, reports both operational and valid-response definitions of
+same-wrong-answer concentration, and writes `analysis/paper_metrics.{json,csv}`.
+The complete-parse sensitivity analysis is required because quantization can
+also change structured-answer validity.

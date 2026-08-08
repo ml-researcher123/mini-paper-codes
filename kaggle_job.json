@@ -1,6 +1,6 @@
 {
   "job_id": "2026-08-08-phi-v2",
-  "enabled": true,
+  "enabled": false,
   "command": [
     "python",
     "-u",
