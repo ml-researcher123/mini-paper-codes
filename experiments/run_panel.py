@@ -85,10 +85,13 @@ def extract_answer(text: str, example: dict[str, Any]) -> str | None:
 
 
 def load_model(model_name: str, precision: str):
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+    # Both selected architectures are native to Transformers. Avoiding remote
+    # model code prevents an old Phi implementation from depending on removed
+    # DynamicCache attributes in newer Kaggle images.
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=False)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-    kwargs: dict[str, Any] = {"device_map": "auto", "trust_remote_code": True}
+    kwargs: dict[str, Any] = {"device_map": "auto", "trust_remote_code": False}
     if precision == "fp16":
         kwargs["torch_dtype"] = torch.float16
     elif precision == "nf4":
