@@ -74,13 +74,25 @@ def load_examples(name: str, limit: int) -> list[dict[str, Any]]:
 
 
 def extract_answer(text: str, example: dict[str, Any]) -> str | None:
-    final = text.rsplit("FINAL:", 1)[-1].strip() if "FINAL:" in text else text
     if example["kind"] == "mc":
+        # Some models emit a valid "Final Answer: B" and then append an empty
+        # "FINAL:" token. Select the last explicit answer-bearing marker rather
+        # than blindly taking the text after the final marker.
+        explicit_patterns = (
+            r"(?i)\bfinal\s*(?:answer)?\s*:\s*(?:option\s*)?[\[(]?([A-Z])\b",
+            r"(?i)\b(?:the\s+)?correct\s+answer\s*(?:is)?\s*:?\s*(?:option\s*)?[\[(]?([A-Z])\b",
+        )
+        explicit = [match for pattern in explicit_patterns for match in re.finditer(pattern, text)]
+        if explicit:
+            answer = max(explicit, key=lambda match: match.start()).group(1).upper()
+            return answer if ord(answer) - 65 < example["num_choices"] else None
+        final = text.rsplit("FINAL:", 1)[-1].strip() if "FINAL:" in text else text
         match = re.search(r"\b([A-Z])\b", final.upper())
         if not match:
             return None
         answer = match.group(1)
         return answer if ord(answer) - 65 < example["num_choices"] else None
+    final = text.rsplit("FINAL:", 1)[-1].strip() if "FINAL:" in text else text
     return normalize_number(final)
 
 

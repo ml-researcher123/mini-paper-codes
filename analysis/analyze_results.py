@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -41,6 +42,8 @@ def discover(root: Path) -> dict[tuple[str, str, str], list[dict[str, Any]]]:
         if len(parts) != 3 or parts[0] not in MODEL_NAMES:
             continue
         rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+        if parts[2] == "truthful_qa_mc1":
+            rows = reparse_explicit_mc_answers(rows)
         key = (MODEL_NAMES[parts[0]], parts[2], parts[1])
         candidates[key].append((path, rows))
 
@@ -51,6 +54,22 @@ def discover(root: Path) -> dict[tuple[str, str, str], list[dict[str, Any]]]:
             raise ValueError(f"Incomplete selected condition {path}: {len(rows)}/300")
         selected[key] = rows
     return selected
+
+
+def reparse_explicit_mc_answers(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Recover only unambiguous explicit labels missed by the original parser."""
+    patterns = (
+        r"(?i)\bfinal\s*(?:answer)?\s*:\s*(?:option\s*)?[\[(]?([A-Z])\b",
+        r"(?i)\b(?:the\s+)?correct\s+answer\s*(?:is)?\s*:?\s*(?:option\s*)?[\[(]?([A-Z])\b",
+    )
+    for row in rows:
+        for sample in row["samples"]:
+            matches = [match for pattern in patterns for match in re.finditer(pattern, sample["text"])]
+            if matches:
+                answer = max(matches, key=lambda match: match.start()).group(1).upper()
+                sample["answer"] = answer
+                sample["correct"] = answer == row["gold"]
+    return rows
 
 
 def question_arrays(rows: list[dict[str, Any]]) -> dict[str, np.ndarray]:
