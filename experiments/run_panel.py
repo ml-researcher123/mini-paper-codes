@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.metadata
 import json
 import os
 import random
@@ -246,6 +247,16 @@ def main() -> None:
     config = json.loads(args.config.read_text(encoding="utf-8"))
     args.output_dir.mkdir(parents=True, exist_ok=True)
     atomic_json(args.output_dir / "resolved_config.json", config)
+    atomic_json(
+        args.output_dir / "environment.json",
+        {
+            "torch": torch.__version__,
+            "transformers": importlib.metadata.version("transformers"),
+            "accelerate": importlib.metadata.version("accelerate"),
+            "bitsandbytes": importlib.metadata.version("bitsandbytes"),
+            "cuda": torch.version.cuda,
+        },
+    )
     if not 0 <= args.shard_index < args.num_shards:
         raise ValueError("shard-index must be in [0, num-shards)")
     summary_name = "summary.json" if args.num_shards == 1 else f"summary_shard_{args.shard_index}.json"

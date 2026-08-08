@@ -30,7 +30,7 @@ else:
     )
 
 subprocess.run(
-    [sys.executable, "-m", "pip", "install", "-q", "-r", str(CHECKOUT / "requirements-kaggle.txt")],
+    [sys.executable, "-m", "pip", "install", "--upgrade", "-q", "-r", str(CHECKOUT / "requirements-kaggle.txt")],
     check=True,
 )
 # This call intentionally blocks while the notebook is acting as a worker.
