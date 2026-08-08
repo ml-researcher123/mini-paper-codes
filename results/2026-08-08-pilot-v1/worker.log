@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/kaggle/working/mini-paper-codes/experiments/run_panel.py", line 240, in <module>
+    main()
+  File "/kaggle/working/mini-paper-codes/experiments/run_panel.py", line 213, in main
+    atomic_json(args.output_dir / "resolved_config.json", config)
+  File "/kaggle/working/mini-paper-codes/experiments/run_panel.py", line 22, in atomic_json
+    temporary.replace(path)
+  File "/usr/lib/python3.12/pathlib.py", line 1376, in replace
+    os.replace(self, target)
+FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/working/mini-paper-codes/.worker_work/2026-08-08-pilot-v1/resolved_config.json.tmp' -> '/kaggle/working/mini-paper-codes/.worker_work/2026-08-08-pilot-v1/resolved_config.json'
+Generating validation split:   0%|          | 0/817 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 817/817 [00:00<00:00, 15327.74 examples/s]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:26<00:26, 26.59s/it]Fetching 2 files: 100%|██████████| 2/2 [00:26<00:00, 13.29s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.39s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.04s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.09s/it]

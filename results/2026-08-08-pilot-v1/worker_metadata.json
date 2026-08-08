@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python",
+    "-u",
+    "experiments/run_dual_gpu.py",
+    "--config",
+    "configs/pilot.json",
+    "--output-dir",
+    "/kaggle/working/mini-paper-codes/.worker_work/2026-08-08-pilot-v1"
+  ],
+  "job_id": "2026-08-08-pilot-v1",
+  "source_sha": "c851ca16d553e44c3b85c7ffebafac4c80158bef",
+  "started_at": "2026-08-08T05:16:17.876231+00:00",
+  "status": "running"
+}
