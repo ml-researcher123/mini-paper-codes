@@ -8,5 +8,10 @@
     "finished_at": "2026-08-08T10:34:52.502832+00:00",
     "source_sha": "11f8834c9eb828c6de900c97250aba6fc8d0eef1",
     "status": "failed"
+  },
+  "2026-08-08-phi-v2": {
+    "finished_at": "2026-08-08T16:13:53.190069+00:00",
+    "source_sha": "0e49a97e20beaa6af0e18a60a896e7d4eea38d18",
+    "status": "succeeded"
   }
 }

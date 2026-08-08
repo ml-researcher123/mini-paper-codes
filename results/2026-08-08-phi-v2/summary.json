@@ -1,0 +1,62 @@
+[
+  {
+    "agreement_brier": 0.2942666666666667,
+    "beta_all_agents_wrong": 0.6866666666666666,
+    "cofailure_count": 206,
+    "condition": "microsoft_Phi-3.5-mini-instruct__fp16__gsm8k",
+    "dataset": "gsm8k",
+    "individual_accuracy": 0.16866666666666666,
+    "kappa_same_wrong_given_all_wrong": 0.06796116504854369,
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "panel_accuracy": 0.16333333333333333,
+    "precision": "fp16",
+    "questions": 300,
+    "same_wrong_all_rate": 0.04666666666666667,
+    "same_wrong_count": 14
+  },
+  {
+    "agreement_brier": 0.5114666666666666,
+    "beta_all_agents_wrong": 0.5166666666666667,
+    "cofailure_count": 155,
+    "condition": "microsoft_Phi-3.5-mini-instruct__fp16__truthful_qa_mc1",
+    "dataset": "truthful_qa_mc1",
+    "individual_accuracy": 0.45066666666666666,
+    "kappa_same_wrong_given_all_wrong": 0.896774193548387,
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "panel_accuracy": 0.45,
+    "precision": "fp16",
+    "questions": 300,
+    "same_wrong_all_rate": 0.4633333333333333,
+    "same_wrong_count": 139
+  },
+  {
+    "agreement_brier": 0.2852,
+    "beta_all_agents_wrong": 0.68,
+    "cofailure_count": 204,
+    "condition": "microsoft_Phi-3.5-mini-instruct__nf4__gsm8k",
+    "dataset": "gsm8k",
+    "individual_accuracy": 0.18533333333333332,
+    "kappa_same_wrong_given_all_wrong": 0.0392156862745098,
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "panel_accuracy": 0.2,
+    "precision": "nf4",
+    "questions": 300,
+    "same_wrong_all_rate": 0.02666666666666667,
+    "same_wrong_count": 8
+  },
+  {
+    "agreement_brier": 0.5321333333333332,
+    "beta_all_agents_wrong": 0.5533333333333333,
+    "cofailure_count": 166,
+    "condition": "microsoft_Phi-3.5-mini-instruct__nf4__truthful_qa_mc1",
+    "dataset": "truthful_qa_mc1",
+    "individual_accuracy": 0.43,
+    "kappa_same_wrong_given_all_wrong": 0.8795180722891566,
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "panel_accuracy": 0.43,
+    "precision": "nf4",
+    "questions": 300,
+    "same_wrong_all_rate": 0.4866666666666667,
+    "same_wrong_count": 146
+  }
+]
