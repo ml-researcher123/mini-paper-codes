@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python",
+    "-u",
+    "experiments/run_dual_gpu.py",
+    "--config",
+    "configs/phi.json",
+    "--output-dir",
+    "/kaggle/working/mini-paper-codes/.worker_work/2026-08-08-phi-v2"
+  ],
+  "job_id": "2026-08-08-phi-v2",
+  "source_sha": "0e49a97e20beaa6af0e18a60a896e7d4eea38d18",
+  "started_at": "2026-08-08T11:46:06.215319+00:00",
+  "status": "running"
+}
