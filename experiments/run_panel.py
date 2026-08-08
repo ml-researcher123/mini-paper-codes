@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 import re
 from collections import Counter
@@ -17,7 +18,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 
 def atomic_json(path: Path, value: Any) -> None:
-    temporary = path.with_suffix(path.suffix + ".tmp")
+    # Two GPU shards may write identical shared metadata concurrently. A
+    # process-specific temporary path keeps their atomic replaces independent.
+    temporary = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
     temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     temporary.replace(path)
 

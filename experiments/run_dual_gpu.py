@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 def atomic_json(path: Path, value: object) -> None:
-    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
     temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     temporary.replace(path)
 

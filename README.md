@@ -46,3 +46,7 @@ python kaggle_worker.py --repo-dir . --once --no-push
 For the real experiment, install [`requirements-kaggle.txt`](requirements-kaggle.txt).
 The experiment saves one JSONL file per model/precision/dataset condition and a
 machine-readable summary. It resumes completed conditions after interruption.
+
+The initial TruthfulQA run exposed and preserved a useful one-shard checkpoint;
+`2026-08-08-gsm8k-v1` is queued next so the repaired two-GPU runner covers the
+missing free-response conditions without repeating those completed MC results.
