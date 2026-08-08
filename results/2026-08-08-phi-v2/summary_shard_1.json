@@ -1,0 +1,17 @@
+[
+  {
+    "agreement_brier": 0.2942666666666667,
+    "beta_all_agents_wrong": 0.6866666666666666,
+    "cofailure_count": 206,
+    "condition": "microsoft_Phi-3.5-mini-instruct__fp16__gsm8k",
+    "dataset": "gsm8k",
+    "individual_accuracy": 0.16866666666666666,
+    "kappa_same_wrong_given_all_wrong": 0.06796116504854369,
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "panel_accuracy": 0.16333333333333333,
+    "precision": "fp16",
+    "questions": 300,
+    "same_wrong_all_rate": 0.04666666666666667,
+    "same_wrong_count": 14
+  }
+]
