@@ -40,3 +40,32 @@ Traceback (most recent call last):
     past_length = past_key_values.seen_tokens
                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'DynamicCache' object has no attribute 'seen_tokens'
+WARNING:transformers_modules.microsoft.Phi_hyphen_3_dot_5_hyphen_mini_hyphen_instruct.2fe192450127e6a83f7441aef6e3ca586c338b77.modeling_phi3:`flash-attention` package not found, consider installing for better performance: No module named 'flash_attn'.
+WARNING:transformers_modules.microsoft.Phi_hyphen_3_dot_5_hyphen_mini_hyphen_instruct.2fe192450127e6a83f7441aef6e3ca586c338b77.modeling_phi3:Current `flash-attention` does not support `window_size`. Either upgrade or use `attn_implementation='eager'`.
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:06<00:06,  6.72s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:10<00:00,  4.90s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:10<00:00,  5.17s/it]
+Traceback (most recent call last):
+  File "/kaggle/working/mini-paper-codes/experiments/run_panel.py", line 243, in <module>
+    main()
+  File "/kaggle/working/mini-paper-codes/experiments/run_panel.py", line 233, in main
+    result = run_condition(model_name, precision, dataset_spec, config, args.output_dir)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/mini-paper-codes/experiments/run_panel.py", line 194, in run_condition
+    text = generate_one(tokenizer, model, example["prompt"], seed, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/mini-paper-codes/experiments/run_panel.py", line 119, in generate_one
+    output = model.generate(
+             ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/generation/utils.py", line 2566, in generate
+    result = decoding_method(
+             ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/generation/utils.py", line 2783, in _sample
+    model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.cache/huggingface/modules/transformers_modules/microsoft/Phi_hyphen_3_dot_5_hyphen_mini_hyphen_instruct/2fe192450127e6a83f7441aef6e3ca586c338b77/modeling_phi3.py", line 1298, in prepare_inputs_for_generation
+    past_length = past_key_values.seen_tokens
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DynamicCache' object has no attribute 'seen_tokens'
+GPU shard failure(s): [1, 1]
