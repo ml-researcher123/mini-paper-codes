@@ -3,5 +3,10 @@
     "finished_at": "2026-08-08T09:13:05.798084+00:00",
     "source_sha": "f91fbe5b18dc6d0b50940ac38ec53876c2402760",
     "status": "failed"
+  },
+  "2026-08-08-missing-v1": {
+    "finished_at": "2026-08-08T10:34:52.502832+00:00",
+    "source_sha": "11f8834c9eb828c6de900c97250aba6fc8d0eef1",
+    "status": "failed"
   }
 }
