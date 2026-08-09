@@ -13,5 +13,35 @@
     "questions": 300,
     "same_wrong_all_rate": 0.47,
     "same_wrong_count": 141
+  },
+  {
+    "agreement_brier": 0.10386666666666669,
+    "beta_all_agents_wrong": 0.35333333333333333,
+    "cofailure_count": 106,
+    "condition": "Qwen_Qwen2.5-3B-Instruct__nf4__gsm8k",
+    "dataset": "gsm8k",
+    "individual_accuracy": 0.41,
+    "kappa_same_wrong_given_all_wrong": 0.0,
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "panel_accuracy": 0.5333333333333333,
+    "precision": "nf4",
+    "questions": 300,
+    "same_wrong_all_rate": 0.0,
+    "same_wrong_count": 0
+  },
+  {
+    "agreement_brier": 0.45546666666666663,
+    "beta_all_agents_wrong": 0.48,
+    "cofailure_count": 144,
+    "condition": "microsoft_Phi-3.5-mini-instruct__nf4__truthful_qa_mc1",
+    "dataset": "truthful_qa_mc1",
+    "individual_accuracy": 0.502,
+    "kappa_same_wrong_given_all_wrong": 0.8680555555555556,
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "panel_accuracy": 0.5,
+    "precision": "nf4",
+    "questions": 300,
+    "same_wrong_all_rate": 0.4166666666666667,
+    "same_wrong_count": 125
   }
 ]
