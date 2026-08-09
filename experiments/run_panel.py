@@ -125,10 +125,27 @@ def load_model(model_name: str, precision: str):
         # The legacy Phi implementation treats None as an unbounded dynamic
         # cache, matching the behavior of the former Transformers API.
         DynamicCache.get_max_length = lambda cache: None
+    if use_remote_code and not hasattr(DynamicCache, "get_usable_length"):
+        # Phi-3.5's remote modeling code predates the modern Cache API. Mirror
+        # the removed method instead of discovering missing aliases one run at
+        # a time. DynamicCache is unbounded, so this normally returns the
+        # sequence length already stored for the requested layer.
+        def legacy_get_usable_length(cache, new_seq_length: int, layer_idx: int = 0) -> int:
+            previous_seq_length = cache.get_seq_length(layer_idx)
+            max_length = cache.get_max_length()
+            if max_length is not None and previous_seq_length + new_seq_length > max_length:
+                return max_length - new_seq_length
+            return previous_seq_length
+
+        DynamicCache.get_usable_length = legacy_get_usable_length
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=use_remote_code)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
     kwargs: dict[str, Any] = {"device_map": "auto", "trust_remote_code": use_remote_code}
+    if use_remote_code:
+        # Keep Phi on the path that uses the audited Cache methods above; the
+        # optional FlashAttention path also indexes legacy cache objects.
+        kwargs["attn_implementation"] = "eager"
     if precision == "fp16":
         kwargs["torch_dtype"] = torch.float16
     elif precision == "nf4":
