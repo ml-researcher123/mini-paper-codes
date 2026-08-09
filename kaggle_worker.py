@@ -221,7 +221,11 @@ def main() -> None:
                     print(f"[{utc_now()}] starting {job['job_id']}", flush=True)
                     execute_job(repo, args.branch, job, work_root, args.checkpoint_minutes, args.no_push)
                 else:
-                    print(f"[{utc_now()}] waiting; {job['job_id']} is already complete", flush=True)
+                    recorded_status = completed[job["job_id"]].get("status", "unknown")
+                    print(
+                        f"[{utc_now()}] waiting; {job['job_id']} is recorded as {recorded_status}",
+                        flush=True,
+                    )
             else:
                 print(f"[{utc_now()}] waiting; no enabled job", flush=True)
         except Exception as exc:

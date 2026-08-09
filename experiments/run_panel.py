@@ -121,6 +121,10 @@ def load_model(model_name: str, precision: str):
     use_remote_code = model_name.startswith("microsoft/Phi-3.5")
     if use_remote_code and not hasattr(DynamicCache, "seen_tokens"):
         DynamicCache.seen_tokens = property(lambda cache: cache.get_seq_length())
+    if use_remote_code and not hasattr(DynamicCache, "get_max_length"):
+        # The legacy Phi implementation treats None as an unbounded dynamic
+        # cache, matching the behavior of the former Transformers API.
+        DynamicCache.get_max_length = lambda cache: None
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=use_remote_code)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
