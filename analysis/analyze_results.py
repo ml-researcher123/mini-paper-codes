@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -29,13 +30,29 @@ METRICS = (
 )
 
 
+def json_safe(value: Any) -> Any:
+    """Replace non-finite floats, which are invalid JSON, with explicit nulls."""
+    if isinstance(value, dict):
+        return {key: json_safe(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [json_safe(item) for item in value]
+    if isinstance(value, (float, np.floating)) and not math.isfinite(float(value)):
+        return None
+    return value
+
+
 def atomic_json(path: Path, value: Any) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary.write_text(json.dumps(json_safe(value), indent=2, sort_keys=True) + "\n", encoding="utf-8")
     temporary.replace(path)
 
 
-def discover(root: Path) -> dict[tuple[str, str, str], list[dict[str, Any]]]:
+def discover(
+    root: Path,
+) -> tuple[
+    dict[tuple[str, str, str], list[dict[str, Any]]],
+    dict[tuple[str, str, str], str],
+]:
     candidates: dict[tuple[str, str, str], list[tuple[Path, list[dict[str, Any]]]]] = defaultdict(list)
     for path in root.glob("results/*/*.jsonl"):
         parts = path.stem.split("__")
@@ -48,12 +65,14 @@ def discover(root: Path) -> dict[tuple[str, str, str], list[dict[str, Any]]]:
         candidates[key].append((path, rows))
 
     selected: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
+    sources: dict[tuple[str, str, str], str] = {}
     for key, versions in candidates.items():
         path, rows = max(versions, key=lambda item: (len(item[1]), str(item[0])))
         if len(rows) != 300:
             raise ValueError(f"Incomplete selected condition {path}: {len(rows)}/300")
         selected[key] = rows
-    return selected
+        sources[key] = path.relative_to(root).as_posix()
+    return selected, sources
 
 
 def reparse_explicit_mc_answers(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -117,6 +136,10 @@ def aggregate(arrays: dict[str, np.ndarray], indices: np.ndarray | None = None) 
     result["kappa_same_wrong_given_valid_all_wrong"] = (
         float(chosen["same_wrong_all_rate"].sum() / valid_beta) if valid_beta else float("nan")
     )
+    result["questions"] = int(len(chosen["panel_accuracy"]))
+    result["cofailure_count"] = int(beta)
+    result["valid_cofailure_count"] = int(valid_beta)
+    result["same_wrong_count"] = int(chosen["same_wrong_all_rate"].sum())
     return result
 
 
@@ -149,16 +172,21 @@ def paired_bootstrap(
     for metric in METRICS:
         if metric in ("kappa_same_wrong_given_all_wrong", "kappa_same_wrong_given_valid_all_wrong"):
             denominator = "beta_all_agents_wrong" if metric == "kappa_same_wrong_given_all_wrong" else "valid_all_wrong"
-            fp_values = fp["same_wrong_all_rate"][draws].sum(axis=1) / fp[denominator][draws].sum(axis=1)
-            nf_values = nf["same_wrong_all_rate"][draws].sum(axis=1) / nf[denominator][draws].sum(axis=1)
+            with np.errstate(divide="ignore", invalid="ignore"):
+                fp_values = fp["same_wrong_all_rate"][draws].sum(axis=1) / fp[denominator][draws].sum(axis=1)
+                nf_values = nf["same_wrong_all_rate"][draws].sum(axis=1) / nf[denominator][draws].sum(axis=1)
         else:
             fp_values = fp[metric][draws].mean(axis=1)
             nf_values = nf[metric][draws].mean(axis=1)
         delta = nf_values - fp_values
+        finite_delta = delta[np.isfinite(delta)]
+        point_delta = nf_point[metric] - fp_point[metric]
+        estimable = math.isfinite(point_delta) and len(finite_delta) > 0
         output[metric] = {
-            "delta_nf4_minus_fp16": nf_point[metric] - fp_point[metric],
-            "ci95_low": float(np.quantile(delta, 0.025)),
-            "ci95_high": float(np.quantile(delta, 0.975)),
+            "delta_nf4_minus_fp16": float(point_delta) if estimable else None,
+            "ci95_low": float(np.quantile(finite_delta, 0.025)) if estimable else None,
+            "ci95_high": float(np.quantile(finite_delta, 0.975)) if estimable else None,
+            "valid_bootstrap_replicates": int(len(finite_delta)),
         }
     return output
 
@@ -193,7 +221,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=20260809)
     args = parser.parse_args()
     root = args.repo_root.resolve()
-    conditions = discover(root)
+    conditions, sources = discover(root)
     expected = {
         (model, dataset, precision)
         for model in MODEL_NAMES.values()
@@ -207,7 +235,13 @@ def main() -> None:
     report: dict[str, Any] = {"conditions": [], "paired_comparisons": []}
     for (model, dataset, precision), rows in sorted(conditions.items()):
         report["conditions"].append(
-            {"model": model, "dataset": dataset, "precision": precision, **aggregate(question_arrays(rows))}
+            {
+                "model": model,
+                "dataset": dataset,
+                "precision": precision,
+                "source_file": sources[(model, dataset, precision)],
+                **aggregate(question_arrays(rows)),
+            }
         )
 
     for pair_index, model in enumerate(MODEL_NAMES.values()):
@@ -271,8 +305,8 @@ def main() -> None:
                         "model": comparison["model"],
                         "dataset": comparison["dataset"],
                         "metric": metric,
-                        "fp16": condition_lookup[(comparison["model"], comparison["dataset"], "fp16")][metric],
-                        "nf4": condition_lookup[(comparison["model"], comparison["dataset"], "nf4")][metric],
+                        "fp16": json_safe(condition_lookup[(comparison["model"], comparison["dataset"], "fp16")][metric]),
+                        "nf4": json_safe(condition_lookup[(comparison["model"], comparison["dataset"], "nf4")][metric]),
                         "delta": interval["delta_nf4_minus_fp16"],
                         "ci95_low": interval["ci95_low"],
                         "ci95_high": interval["ci95_high"],

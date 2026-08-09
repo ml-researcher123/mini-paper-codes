@@ -119,6 +119,7 @@ def load_model(model_name: str, precision: str):
     # components on text-only Kaggle images. Restore its deprecated cache alias
     # explicitly when using a modern Transformers release.
     use_remote_code = model_name.startswith("microsoft/Phi-3.5")
+    phi_revision = "2fe192450127e6a83f7441aef6e3ca586c338b77" if use_remote_code else None
     if use_remote_code and not hasattr(DynamicCache, "seen_tokens"):
         DynamicCache.seen_tokens = property(lambda cache: cache.get_seq_length())
     if use_remote_code and not hasattr(DynamicCache, "get_max_length"):
@@ -138,7 +139,10 @@ def load_model(model_name: str, precision: str):
             return previous_seq_length
 
         DynamicCache.get_usable_length = legacy_get_usable_length
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=use_remote_code)
+    tokenizer_kwargs: dict[str, Any] = {"trust_remote_code": use_remote_code}
+    if phi_revision is not None:
+        tokenizer_kwargs["revision"] = phi_revision
+    tokenizer = AutoTokenizer.from_pretrained(model_name, **tokenizer_kwargs)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
     kwargs: dict[str, Any] = {"device_map": "auto", "trust_remote_code": use_remote_code}
@@ -146,6 +150,7 @@ def load_model(model_name: str, precision: str):
         # Keep Phi on the path that uses the audited Cache methods above; the
         # optional FlashAttention path also indexes legacy cache objects.
         kwargs["attn_implementation"] = "eager"
+        kwargs["revision"] = phi_revision
     if precision == "fp16":
         kwargs["torch_dtype"] = torch.float16
     elif precision == "nf4":
