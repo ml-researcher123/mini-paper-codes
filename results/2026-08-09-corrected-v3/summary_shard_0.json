@@ -43,5 +43,20 @@
     "questions": 300,
     "same_wrong_all_rate": 0.36333333333333334,
     "same_wrong_count": 109
+  },
+  {
+    "agreement_brier": 0.11960000000000001,
+    "beta_all_agents_wrong": 0.3933333333333333,
+    "cofailure_count": 118,
+    "condition": "microsoft_Phi-3.5-mini-instruct__fp16__gsm8k",
+    "dataset": "gsm8k",
+    "individual_accuracy": 0.3353333333333333,
+    "kappa_same_wrong_given_all_wrong": 0.0,
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "panel_accuracy": 0.4866666666666667,
+    "precision": "fp16",
+    "questions": 300,
+    "same_wrong_all_rate": 0.0,
+    "same_wrong_count": 0
   }
 ]
