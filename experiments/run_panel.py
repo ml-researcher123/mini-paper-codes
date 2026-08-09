@@ -16,6 +16,7 @@ import numpy as np
 import torch
 from datasets import load_dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers.cache_utils import DynamicCache
 
 
 def atomic_json(path: Path, value: Any) -> None:
@@ -114,13 +115,16 @@ def extract_answer(text: str, example: dict[str, Any]) -> str | None:
 
 
 def load_model(model_name: str, precision: str):
-    # Both selected architectures are native to Transformers. Avoiding remote
-    # model code prevents an old Phi implementation from depending on removed
-    # DynamicCache attributes in newer Kaggle images.
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=False)
+    # Phi's compact remote implementation avoids importing optional vision
+    # components on text-only Kaggle images. Restore its deprecated cache alias
+    # explicitly when using a modern Transformers release.
+    use_remote_code = model_name.startswith("microsoft/Phi-3.5")
+    if use_remote_code and not hasattr(DynamicCache, "seen_tokens"):
+        DynamicCache.seen_tokens = property(lambda cache: cache.get_seq_length())
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=use_remote_code)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-    kwargs: dict[str, Any] = {"device_map": "auto", "trust_remote_code": False}
+    kwargs: dict[str, Any] = {"device_map": "auto", "trust_remote_code": use_remote_code}
     if precision == "fp16":
         kwargs["torch_dtype"] = torch.float16
     elif precision == "nf4":

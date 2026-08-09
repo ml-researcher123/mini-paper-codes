@@ -1,12 +1,13 @@
 {
-  "job_id": "2026-08-09-corrected-v3",
+  "job_id": "2026-08-09-phi-nf4-gsm-v4",
   "enabled": true,
+  "resume_from_job": "2026-08-09-corrected-v3",
   "command": [
     "python",
     "-u",
     "experiments/run_dual_gpu.py",
     "--config",
-    "configs/corrected.json",
+    "configs/phi_nf4_gsm_resume.json",
     "--output-dir",
     "{output_dir}"
   ]

@@ -3,7 +3,6 @@ bitsandbytes>=0.45,<1
 datasets>=2.20,<5
 numpy>=1.26,<3
 sentencepiece>=0.2,<1
-torch>=2.3
 # Both architectures use native model implementations, so keep a modern,
 # mutually compatible Transformers/Accelerate/bitsandbytes stack.
 transformers>=4.56,<5

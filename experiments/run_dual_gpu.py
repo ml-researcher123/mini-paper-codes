@@ -25,7 +25,13 @@ def main() -> None:
 
     import torch
 
-    gpu_count = min(2, torch.cuda.device_count())
+    config = json.loads(args.config.read_text(encoding="utf-8"))
+    condition_count = len(config.get("conditions", [])) or (
+        len(config.get("models", []))
+        * len(config.get("precisions", []))
+        * len(config.get("datasets", []))
+    )
+    gpu_count = min(2, torch.cuda.device_count(), max(1, condition_count))
     if gpu_count < 1:
         raise RuntimeError("No CUDA GPU detected")
 
@@ -51,6 +57,10 @@ def main() -> None:
     return_codes = [process.wait() for process in processes]
     if any(code != 0 for code in return_codes):
         raise SystemExit(f"GPU shard failure(s): {return_codes}")
+
+    if gpu_count == 1:
+        # run_panel already wrote summary.json in single-shard mode.
+        return
 
     merged: list[dict] = []
     for shard in range(gpu_count):
