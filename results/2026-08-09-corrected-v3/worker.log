@@ -108,3 +108,7 @@ KeyboardInterrupt
 `torch_dtype` is deprecated! Use `dtype` instead!
 Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.28s/it]Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.05it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.00s/it]
 Loading checkpoint shards:  50%|█████     | 1/2 [00:05<00:05,  5.16s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:08<00:00,  3.99s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:08<00:00,  4.17s/it]
+Generating validation split:   0%|          | 0/817 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 817/817 [00:00<00:00, 96210.98 examples/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:31<00:31, 31.40s/it]Fetching 2 files: 100%|██████████| 2/2 [00:31<00:00, 15.70s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.65s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.20s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.27s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.77s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.30s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.37s/it]
