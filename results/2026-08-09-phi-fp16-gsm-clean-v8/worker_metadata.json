@@ -9,7 +9,7 @@
     "/content/mini-paper-codes/.worker_work/2026-08-09-phi-fp16-gsm-clean-v8"
   ],
   "job_id": "2026-08-09-phi-fp16-gsm-clean-v8",
-  "source_sha": "ad46716b90a4d98c88095c54059d467057ba0b95",
-  "started_at": "2026-08-09T15:54:23.796497+00:00",
+  "source_sha": "d5ea764a97328e150a3ffd2723ec5330c2219e24",
+  "started_at": "2026-08-09T16:36:24.630914+00:00",
   "status": "running"
 }
