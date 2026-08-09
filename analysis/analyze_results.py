@@ -26,6 +26,7 @@ METRICS = (
     "kappa_same_wrong_given_all_wrong",
     "same_wrong_all_rate",
     "agreement_brier",
+    "agreement_aurc",
     "invalid_answer_rate",
 )
 
@@ -109,8 +110,12 @@ def question_arrays(rows: list[dict[str, Any]]) -> dict[str, np.ndarray]:
             sample["answer"] if sample["answer"] is not None else f"__invalid_{sample['member']}"
             for sample in samples
         ]
-        panel_answer, votes = Counter(answers).most_common(1)[0]
-        panel_correct = float(panel_answer == row["gold"])
+        counts = Counter(answers)
+        votes = max(counts.values())
+        tied_answers = [answer for answer, count in counts.items() if count == votes]
+        # Report the expected accuracy of uniform random tie-breaking instead
+        # of letting Counter order silently favor the first panel member.
+        panel_correct = float(row["gold"] in tied_answers) / len(tied_answers)
         all_wrong = float(not correct.any())
         raw_answers = [sample["answer"] for sample in samples]
         all_valid = None not in raw_answers
@@ -122,12 +127,32 @@ def question_arrays(rows: list[dict[str, Any]]) -> dict[str, np.ndarray]:
         values["beta_all_agents_wrong"].append(all_wrong)
         values["valid_all_wrong"].append(valid_all_wrong)
         values["same_wrong_all_rate"].append(same_wrong)
-        values["agreement_brier"].append((confidence - panel_correct) ** 2)
+        expected_brier = panel_correct * (confidence - 1.0) ** 2 + (1.0 - panel_correct) * confidence**2
+        values["agreement_brier"].append(expected_brier)
+        values["agreement_confidence"].append(confidence)
         values["invalid_answer_rate"].append(sum(answer is None for answer in raw_answers) / len(samples))
     arrays = {name: np.asarray(value) for name, value in values.items()}
     arrays["kappa_same_wrong_given_all_wrong"] = arrays["same_wrong_all_rate"]
     arrays["kappa_same_wrong_given_valid_all_wrong"] = arrays["same_wrong_all_rate"]
     return arrays
+
+
+def tie_averaged_aurc(confidence: np.ndarray, correctness: np.ndarray) -> float:
+    """Compute AURC while averaging over every ordering within confidence ties."""
+    risks = 1.0 - correctness
+    total_risk = 0.0
+    seen = 0
+    area_terms: list[float] = []
+    for threshold in sorted(set(confidence.tolist()), reverse=True):
+        block = risks[confidence == threshold]
+        block_risk = float(block.sum())
+        block_size = len(block)
+        for offset in range(1, block_size + 1):
+            expected_prefix_risk = total_risk + offset * block_risk / block_size
+            area_terms.append(expected_prefix_risk / (seen + offset))
+        total_risk += block_risk
+        seen += block_size
+    return float(np.mean(area_terms))
 
 
 def aggregate(arrays: dict[str, np.ndarray], indices: np.ndarray | None = None) -> dict[str, float]:
@@ -137,8 +162,16 @@ def aggregate(arrays: dict[str, np.ndarray], indices: np.ndarray | None = None) 
     result = {
         key: float(chosen[key].mean())
         for key in METRICS
-        if key not in ("kappa_same_wrong_given_all_wrong", "kappa_same_wrong_given_valid_all_wrong")
+        if key
+        not in (
+            "kappa_same_wrong_given_all_wrong",
+            "kappa_same_wrong_given_valid_all_wrong",
+            "agreement_aurc",
+        )
     }
+    result["agreement_aurc"] = tie_averaged_aurc(
+        chosen["agreement_confidence"], chosen["panel_accuracy"]
+    )
     result["kappa_same_wrong_given_all_wrong"] = (
         float(chosen["same_wrong_all_rate"].sum() / beta) if beta else float("nan")
     )
@@ -184,6 +217,19 @@ def paired_bootstrap(
             with np.errstate(divide="ignore", invalid="ignore"):
                 fp_values = fp["same_wrong_all_rate"][draws].sum(axis=1) / fp[denominator][draws].sum(axis=1)
                 nf_values = nf["same_wrong_all_rate"][draws].sum(axis=1) / nf[denominator][draws].sum(axis=1)
+        elif metric == "agreement_aurc":
+            fp_values = np.asarray(
+                [
+                    tie_averaged_aurc(fp["agreement_confidence"][draw], fp["panel_accuracy"][draw])
+                    for draw in draws
+                ]
+            )
+            nf_values = np.asarray(
+                [
+                    tie_averaged_aurc(nf["agreement_confidence"][draw], nf["panel_accuracy"][draw])
+                    for draw in draws
+                ]
+            )
         else:
             fp_values = fp[metric][draws].mean(axis=1)
             nf_values = nf[metric][draws].mean(axis=1)
@@ -221,6 +267,67 @@ def stratified_independence_null(rows: list[dict[str, Any]], indices: np.ndarray
         )
         expected += len(group) / total * group_probability
     return expected
+
+
+def chance_adjusted_kappa_bootstrap(
+    fp_rows: list[dict[str, Any]],
+    nf_rows: list[dict[str, Any]],
+    replicates: int,
+    seed: int,
+) -> dict[str, float | int]:
+    """Bootstrap the paired change in kappa minus an answer-frequency null."""
+    fp_by_id = {row["id"]: row for row in fp_rows}
+    nf_by_id = {row["id"]: row for row in nf_rows}
+    ids = sorted(fp_by_id.keys() & nf_by_id.keys())
+    fp = [fp_by_id[item] for item in ids]
+    nf = [nf_by_id[item] for item in ids]
+
+    def prepare(rows: list[dict[str, Any]]) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        cofailure = np.asarray([all(not sample["correct"] for sample in row["samples"]) for row in rows])
+        answers = np.asarray([[sample["answer"] for sample in row["samples"]] for row in rows], dtype=object)
+        valid = np.asarray([None not in answer_row for answer_row in answers])
+        same_wrong = np.asarray(
+            [bool(cofailure[index] and valid[index] and len(set(answer_row)) == 1) for index, answer_row in enumerate(answers)]
+        )
+        gold = np.asarray([str(row["gold"]) for row in rows], dtype=object)
+        return cofailure & valid, same_wrong, gold, answers
+
+    def excess(
+        prepared: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray],
+        indices: np.ndarray,
+    ) -> float:
+        valid_cofailure, same_wrong, gold, answers = (value[indices] for value in prepared)
+        denominator = int(valid_cofailure.sum())
+        if not denominator:
+            return float("nan")
+        point = float(same_wrong.sum() / denominator)
+        null = 0.0
+        for gold_value in set(gold[valid_cofailure].tolist()):
+            block = answers[valid_cofailure & (gold == gold_value)]
+            probability = sum(
+                float(np.prod([(block[:, member] == answer).mean() for member in range(block.shape[1])]))
+                for answer in set(block.ravel().tolist())
+            )
+            null += len(block) / denominator * probability
+        return point - null
+
+    fp_prepared = prepare(fp)
+    nf_prepared = prepare(nf)
+    full_indices = np.arange(len(ids))
+    fp_point = excess(fp_prepared, full_indices)
+    nf_point = excess(nf_prepared, full_indices)
+    rng = np.random.default_rng(seed)
+    draws = rng.integers(0, len(ids), size=(replicates, len(ids)))
+    delta = np.asarray([excess(nf_prepared, draw) - excess(fp_prepared, draw) for draw in draws])
+    finite = delta[np.isfinite(delta)]
+    return {
+        "fp16_excess": fp_point,
+        "nf4_excess": nf_point,
+        "delta_excess_nf4_minus_fp16": nf_point - fp_point,
+        "ci95_low": float(np.quantile(finite, 0.025)),
+        "ci95_high": float(np.quantile(finite, 0.975)),
+        "valid_bootstrap_replicates": int(len(finite)),
+    }
 
 
 def main() -> None:
@@ -285,17 +392,12 @@ def main() -> None:
                 ),
             }
             if dataset == "truthful_qa_mc1":
-                fp_point = aggregate(question_arrays(fp_rows))["kappa_same_wrong_given_valid_all_wrong"]
-                nf_point = aggregate(question_arrays(nf_rows))["kappa_same_wrong_given_valid_all_wrong"]
-                fp_null = stratified_independence_null(fp_rows)
-                nf_null = stratified_independence_null(nf_rows)
-                comparison["chance_adjusted_kappa"] = {
-                    "fp16_independence_null": fp_null,
-                    "nf4_independence_null": nf_null,
-                    "fp16_excess": fp_point - fp_null,
-                    "nf4_excess": nf_point - nf_null,
-                    "delta_excess_nf4_minus_fp16": (nf_point - nf_null) - (fp_point - fp_null),
-                }
+                comparison["chance_adjusted_kappa"] = chance_adjusted_kappa_bootstrap(
+                    fp_rows,
+                    nf_rows,
+                    args.bootstrap_replicates,
+                    args.seed + 200 + pair_index,
+                )
             report["paired_comparisons"].append(comparison)
 
     analysis_dir = root / "analysis"
