@@ -8,8 +8,10 @@
     "--output-dir",
     "/content/mini-paper-codes/.worker_work/2026-08-09-phi-nf4-gsm-clean-v7"
   ],
+  "finished_at": "2026-08-09T15:36:16.288649+00:00",
   "job_id": "2026-08-09-phi-nf4-gsm-clean-v7",
+  "return_code": 0,
   "source_sha": "bd8174a04496e23722bfc744f19d2c211673e52d",
   "started_at": "2026-08-09T14:33:20.093176+00:00",
-  "status": "running"
+  "status": "succeeded"
 }
