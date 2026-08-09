@@ -19,6 +19,14 @@ permanent; after a session expires, start the cell again. Completed job IDs are
 recorded in `results/_completed_jobs.json`, so restarting does not duplicate a
 finished run.
 
+## Moving an unfinished job to Colab
+
+First stop the Kaggle cell, then wait for or verify its latest GitHub checkpoint.
+Create a GPU-enabled Colab notebook, add `GITHUB_TOKEN` in Colab **Secrets** and
+enable notebook access, then paste and run [`COLAB_NOTEBOOK_CELL.py`](COLAB_NOTEBOOK_CELL.py).
+The worker restores `results/<job_id>/` from GitHub and generates only IDs not
+already present. Never leave the Kaggle and Colab workers running concurrently.
+
 ## Triggering a run
 
 Edit [`kaggle_job.json`](kaggle_job.json). Every job must have a new, unique
