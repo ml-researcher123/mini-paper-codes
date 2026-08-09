@@ -1,0 +1,18 @@
+{
+  "base_seed": 20260809,
+  "conditions": [
+    {
+      "dataset": {
+        "limit": 300,
+        "max_new_tokens": 256,
+        "name": "gsm8k"
+      },
+      "model": "microsoft/Phi-3.5-mini-instruct",
+      "precision": "fp16"
+    }
+  ],
+  "max_new_tokens": 256,
+  "panel_size": 5,
+  "temperature": 0.7,
+  "top_p": 0.9
+}
