@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python",
+    "-u",
+    "experiments/run_dual_gpu.py",
+    "--config",
+    "configs/phi_nf4_gsm_resume.json",
+    "--output-dir",
+    "/kaggle/working/mini-paper-codes/.worker_work/2026-08-09-phi-nf4-gsm-v6"
+  ],
+  "job_id": "2026-08-09-phi-nf4-gsm-v6",
+  "source_sha": "edad6d09da0dde0eb4e6f02d4f8cff1617eb87a0",
+  "started_at": "2026-08-09T05:48:18.145711+00:00",
+  "status": "running"
+}
