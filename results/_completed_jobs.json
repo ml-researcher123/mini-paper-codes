@@ -23,5 +23,10 @@
     "finished_at": "2026-08-09T05:35:52.598642+00:00",
     "source_sha": "a3174e9f237a21da3c34beaa0959d4edac793a6e",
     "status": "failed"
+  },
+  "2026-08-09-phi-nf4-gsm-v5": {
+    "finished_at": "2026-08-09T05:40:25.743553+00:00",
+    "source_sha": "cbc2341bdb5ba84cd2499061c0602476459a1f80",
+    "status": "failed"
   }
 }
