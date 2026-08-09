@@ -1,12 +1,12 @@
 {
-  "job_id": "2026-08-09-phi-nf4-gsm-clean-v7",
+  "job_id": "2026-08-09-phi-fp16-gsm-clean-v8",
   "enabled": true,
   "command": [
     "python",
     "-u",
     "experiments/run_dual_gpu.py",
     "--config",
-    "configs/phi_nf4_gsm_resume.json",
+    "configs/phi_fp16_gsm_clean.json",
     "--output-dir",
     "{output_dir}"
   ]
