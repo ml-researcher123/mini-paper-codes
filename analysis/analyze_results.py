@@ -53,7 +53,10 @@ def discover(
     dict[tuple[str, str, str], list[dict[str, Any]]],
     dict[tuple[str, str, str], str],
 ]:
-    candidates: dict[tuple[str, str, str], list[tuple[Path, list[dict[str, Any]]]]] = defaultdict(list)
+    candidates: dict[
+        tuple[str, str, str],
+        list[tuple[Path, list[dict[str, Any]], bool, str]],
+    ] = defaultdict(list)
     for path in root.glob("results/*/*.jsonl"):
         parts = path.stem.split("__")
         if len(parts) != 3 or parts[0] not in MODEL_NAMES:
@@ -62,12 +65,18 @@ def discover(
         if parts[2] == "truthful_qa_mc1":
             rows = reparse_explicit_mc_answers(rows)
         key = (MODEL_NAMES[parts[0]], parts[2], parts[1])
-        candidates[key].append((path, rows))
+        metadata = json.loads((path.parent / "worker_metadata.json").read_text(encoding="utf-8"))
+        succeeded = metadata.get("status") == "succeeded"
+        finished_at = str(metadata.get("finished_at", ""))
+        candidates[key].append((path, rows, succeeded, finished_at))
 
     selected: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
     sources: dict[tuple[str, str, str], str] = {}
     for key, versions in candidates.items():
-        path, rows = max(versions, key=lambda item: (len(item[1]), str(item[0])))
+        path, rows, _, _ = max(
+            versions,
+            key=lambda item: (len(item[1]), item[2], item[3], str(item[0])),
+        )
         if len(rows) != 300:
             raise ValueError(f"Incomplete selected condition {path}: {len(rows)}/300")
         selected[key] = rows
