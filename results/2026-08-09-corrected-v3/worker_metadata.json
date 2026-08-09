@@ -8,8 +8,10 @@
     "--output-dir",
     "/kaggle/working/mini-paper-codes/.worker_work/2026-08-09-corrected-v3"
   ],
+  "finished_at": "2026-08-09T05:22:23.107360+00:00",
   "job_id": "2026-08-09-corrected-v3",
-  "source_sha": "af7cd47a65b220d4dc7a89a7c40312e0c44f6395",
-  "started_at": "2026-08-08T20:31:06.455948+00:00",
-  "status": "running"
+  "return_code": 1,
+  "source_sha": "1b9fe696b80029db16b6923511c77e9a99ac5bc5",
+  "started_at": "2026-08-09T05:22:08.105744+00:00",
+  "status": "failed"
 }
