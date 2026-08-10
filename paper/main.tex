@@ -17,6 +17,7 @@ A Paired Audit of Homogeneous LLM Panels}
 
 \newcommand{\nf}{\textsc{nf4}}
 \newcommand{\fp}{\textsc{fp16}}
+\definecolor{artifactblue}{HTML}{005A9C}
 
 \begin{document}
 \maketitle
@@ -34,6 +35,12 @@ Quantization is one such change. It makes open LLMs much cheaper to run, but rec
 We study this distinction with a controlled, small-scale audit. For each checkpoint, task, and question, we compare five independently sampled responses at \fp{} and locally quantized \nf{}. We separate three questions: does quantization change individual and panel accuracy; does it increase the all-members-wrong tail; and, conditional on that tail, does it make members choose the same wrong answer? We also test whether maximum vote share remains useful for ranking reliable panel decisions.
 
 Our results are mixed in a useful way. On open-response mathematics, \nf{} consistently lowers accuracy, raises co-failure, increases format invalidity, and worsens selective reliability. On multiple choice, Phi-3.5-mini degrades but Qwen2.5-3B is stable. Yet identical-wrong concentration does not move consistently. The main lesson is therefore not that quantization always creates shared mistakes. It is that agreement-based uncertainty can degrade through more than one route, and raw consensus counts blur those routes.
+
+\noindent\textbf{Anonymous code and data:}\\[-1pt]
+\href{https://anonymous.4open.science/r/quantization-and-agreement-in-homogeneous-llm-panels}{\textcolor{artifactblue}{%
+\nolinkurl{https://anonymous.4open.science/r/}\allowbreak%
+\nolinkurl{quantization-and-agreement-in-}\allowbreak%
+\nolinkurl{homogeneous-llm-panels}}}
 
 \section{Related Work}
 
@@ -116,7 +123,7 @@ For TruthfulQA, we also subtract a stratified independence baseline that preserv
 
 \section{Reproducibility Details}
 
-The experiment uses five samples per question and base seed 20260809, with member seed $20260809+5i+k$. The final runtime uses Transformers 4.57.6, bitsandbytes 0.50.0, and \fp{} compute for \nf{}. Phi remote model code is pinned to revision \texttt{2fe1924}. Raw JSONL generations, configuration files, environment records, analysis code, and 10,000-replicate bootstrap outputs are available in the \href{https://anonymous.4open.science/r/quantization-and-agreement-in-homogeneous-llm-panels}{anonymous code and data repository}.
+The experiment uses five samples per question and base seed 20260809, with member seed $20260809+5i+k$. The final runtime uses Transformers 4.57.6, bitsandbytes 0.50.0, and \fp{} compute for \nf{}. Phi remote model code is pinned to revision \texttt{2fe1924}. Raw JSONL generations, configuration files, environment records, analysis code, and 10,000-replicate bootstrap outputs are provided through the anonymous repository linked after the Introduction.
 
 \section{Prompt Templates}
 
