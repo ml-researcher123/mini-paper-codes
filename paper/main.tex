@@ -27,7 +27,7 @@ Agreement among repeated large language model (LLM) samples is often treated as 
 
 \section{Introduction}
 
-Sampling a language model several times gives a simple uncertainty signal: if the answers agree, we are more willing to trust them. This idea appears in self-consistency, ensembling, and multi-agent systems, where vote share is often used as confidence \citep{wang2023selfconsistency,feng-etal-2025-rethinking,yoffe-etal-2025-debunc}. The signal is useful, but it assumes that agreement keeps the same meaning after the system changes.
+Sampling a language model several times gives a simple uncertainty signal: if the answers agree, we are more willing to trust them. Self-consistency and multi-response uncertainty methods aggregate or compare several answers \citep{wang2023selfconsistency,feng-etal-2025-rethinking,kruse-etal-2025-muse}, while multi-agent debate can explicitly communicate agent confidence \citep{yoffe-etal-2025-debunc}. The signal is useful, but it assumes that agreement keeps the same meaning after the system changes.
 
 Quantization is one such change. It makes open LLMs much cheaper to run, but recent work shows that compressed models can lose calibration even when their accuracy changes only modestly \citep{zhong-etal-2025-quantized,tong2026compression}. Existing studies mainly examine a model's marginal confidence or prediction sets. A panel depends on a joint distribution instead: five members can keep similar marginal accuracy while becoming more likely to fail together, or they can fail more often without concentrating on the same wrong answer. Those cases should not be treated as one phenomenon.
 
@@ -38,10 +38,10 @@ Our results are mixed in a useful way. On open-response mathematics, \nf{} consi
 \section{Related Work}
 
 \paragraph{Compression and uncertainty.}
-\citet{zhong-etal-2025-quantized} show that quantized LLMs are often worse calibrated and recover calibration with soft prompts. \citet{tong2026compression} use conformal prediction to show that compression can decouple accuracy from uncertainty. These studies motivate uncertainty-aware compression evaluation, but they focus on single-model or marginal quantities. Our target is the distribution of errors across repeated members of one quantized checkpoint.
+Quantized LLMs can be worse calibrated, with soft-prompt recovery demonstrated by \citet{zhong-etal-2025-quantized}. Conformal and broader evaluations show accuracy--uncertainty decoupling and precision-sensitive changes in calibration, error ranking, and robustness \citep{tong2026compression,tao2025revisiting,ayadi2026reliability}. These studies examine single-model or marginal quantities; we target errors across repeated members of one quantized checkpoint.
 
 \paragraph{Agreement and collective uncertainty.}
-Multi-sample and multi-agent methods use response diversity to estimate uncertainty \citep{feng-etal-2025-rethinking,kruse-etal-2025-muse}. Communication-aware work further shows that interaction can create correlated failure and false consensus \citep{huang2026cagecal}. We use no communication: each panel is five independent samples from the same model. This removes topology as a cause and isolates the precision intervention. We report the all-wrong rate $\beta$, following the observation that pairwise correlation does not determine the joint failure tail \citep{chen2026cofailure}, and separately measure whether co-failing members land on the same wrong answer.
+Multi-sample and multi-agent methods estimate uncertainty from response diversity or structured semantic disagreement \citep{feng-etal-2025-rethinking,kruse-etal-2025-muse,jiang2026discouq}; accuracy-adjusted correctness dependence also predicts ensemble lift \citep{ali2026diversity}. Communication-aware work further shows that interaction can create correlated failure and false consensus \citep{huang2026cagecal}. We use no communication: each panel is five independent samples from the same model. This removes topology as a cause and isolates the precision intervention. We report the all-wrong rate $\beta$, following the observation that pairwise correlation does not determine the joint failure tail \citep{chen2026cofailure}, and separately measure whether co-failing members land on the same wrong answer.
 
 \section{Paired Panel Audit}
 
