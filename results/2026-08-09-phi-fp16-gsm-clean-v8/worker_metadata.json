@@ -8,8 +8,10 @@
     "--output-dir",
     "/kaggle/working/mini-paper-codes/.worker_work/2026-08-09-phi-fp16-gsm-clean-v8"
   ],
+  "finished_at": "2026-08-10T05:33:21.372561+00:00",
   "job_id": "2026-08-09-phi-fp16-gsm-clean-v8",
+  "return_code": 0,
   "source_sha": "4311418b159bf407b8d4b6395ba1e1cbcc32da6f",
   "started_at": "2026-08-10T05:11:34.764971+00:00",
-  "status": "running"
+  "status": "succeeded"
 }
