@@ -88,32 +88,36 @@ def plot_deltas(report: dict) -> None:
     specifications = [
         ("panel_accuracy", r"$\Delta$ panel accuracy (pp)"),
         ("beta_all_agents_wrong", r"$\Delta\beta$ co-failure (pp)"),
+        ("kappa_same_wrong_given_all_wrong", r"$\Delta\kappa$ same-wrong (pp)"),
         ("agreement_aurc", r"$\Delta$ AURC ($\times 100$)"),
     ]
-    fig, axes = plt.subplots(1, 3, figsize=(7.25, 2.55), sharey=True)
+    fig, axes = plt.subplots(2, 2, figsize=(7.25, 4.15), sharey=True)
     y = np.arange(len(labels))
-    for axis, (metric, title) in zip(axes, specifications):
+    for axis, (metric, title) in zip(axes.ravel(), specifications):
         values = np.asarray([item["metrics"][metric]["delta_nf4_minus_fp16"] for item in comparisons]) * 100
         lows = np.asarray([item["metrics"][metric]["ci95_low"] for item in comparisons]) * 100
         highs = np.asarray([item["metrics"][metric]["ci95_high"] for item in comparisons]) * 100
-        axis.errorbar(
-            values,
-            y,
-            xerr=np.vstack((values - lows, highs - values)),
-            fmt="o",
-            color="#163a5f",
-            ecolor="#4f5964",
-            capsize=2.5,
-            markersize=4.2,
-            linewidth=1.2,
-        )
+        for row, (value, low, high, item) in enumerate(zip(values, lows, highs, comparisons)):
+            sparse_kappa = metric == "kappa_same_wrong_given_all_wrong" and item["dataset"] == "gsm8k"
+            axis.errorbar(
+                value,
+                row,
+                xerr=np.asarray([[value - low], [high - value]]),
+                fmt="x" if sparse_kappa else "o",
+                color="#8a929a" if sparse_kappa else "#163a5f",
+                ecolor="#9da3a9" if sparse_kappa else "#4f5964",
+                capsize=2.5,
+                markersize=4.6 if sparse_kappa else 4.2,
+                linewidth=1.2,
+            )
         axis.axvline(0, color="#8d8d8d", linewidth=0.8, linestyle="--")
         axis.set_xlabel(title, fontsize=8)
         axis.grid(axis="x", color="#dddddd", linewidth=0.5)
         axis.tick_params(labelsize=7.5)
-    axes[0].set_yticks(y, labels, fontsize=7.5)
-    axes[0].invert_yaxis()
-    fig.tight_layout(w_pad=0.8)
+    axes[0, 0].set_yticks(y, labels, fontsize=7.5)
+    axes[0, 0].invert_yaxis()
+    axes[1, 0].tick_params(labelleft=True)
+    fig.tight_layout(w_pad=0.8, h_pad=0.9)
     FIGURES.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGURES / "delta_summary.pdf", bbox_inches="tight")
     fig.savefig(FIGURES / "delta_summary.png", dpi=240, bbox_inches="tight")
