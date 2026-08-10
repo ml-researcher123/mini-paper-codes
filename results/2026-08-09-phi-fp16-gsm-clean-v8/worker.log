@@ -23,3 +23,11 @@ WARNING:transformers_modules.microsoft.Phi_hyphen_3_dot_5_hyphen_mini_hyphen_ins
 Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:24<00:24, 24.67s/it]Fetching 2 files: 100%|██████████| 2/2 [00:24<00:00, 12.33s/it]
 Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.62s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.19s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.25s/it]
 WARNING:transformers_modules.microsoft.Phi_hyphen_3_dot_5_hyphen_mini_hyphen_instruct.2fe192450127e6a83f7441aef6e3ca586c338b77.modeling_phi3:You are not running the flash-attention implementation, expect numerical differences.
+Generating train split:   0%|          | 0/7473 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 7473/7473 [00:00<00:00, 117806.37 examples/s]
+Generating test split:   0%|          | 0/1319 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 1319/1319 [00:00<00:00, 260674.13 examples/s]
+`torch_dtype` is deprecated! Use `dtype` instead!
+WARNING:transformers_modules.microsoft.Phi_hyphen_3_dot_5_hyphen_mini_hyphen_instruct.2fe192450127e6a83f7441aef6e3ca586c338b77.modeling_phi3:`flash-attention` package not found, consider installing for better performance: No module named 'flash_attn'.
+WARNING:transformers_modules.microsoft.Phi_hyphen_3_dot_5_hyphen_mini_hyphen_instruct.2fe192450127e6a83f7441aef6e3ca586c338b77.modeling_phi3:Current `flash-attention` does not support `window_size`. Either upgrade or use `attn_implementation='eager'`.
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:30<00:30, 30.18s/it]Fetching 2 files: 100%|██████████| 2/2 [00:30<00:00, 15.09s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.58s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.16s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.22s/it]
+WARNING:transformers_modules.microsoft.Phi_hyphen_3_dot_5_hyphen_mini_hyphen_instruct.2fe192450127e6a83f7441aef6e3ca586c338b77.modeling_phi3:You are not running the flash-attention implementation, expect numerical differences.
