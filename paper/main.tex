@@ -96,9 +96,11 @@ AURC increases by 5.6 points for Qwen GSM8K and 6.7 for Phi GSM8K; both bootstra
 
 Taken together, the results separate two effects that a raw consensus rate would merge. \nf{} often creates more opportunities for collective failure, but we do not find consistent evidence that a co-failing panel becomes more likely to select one identical wrong answer.
 
-\section{Limitations and Conclusion}
+\section{Limitations}
 
 This is a controlled case study, not a universal quantization benchmark. It covers two small model families, one 4-bit method, two tasks, and 300 fixed questions per task. The members are independent samples from a homogeneous checkpoint, not role-specialized or communicating agents. Exact numeric matching is suitable for GSM8K, but the required final marker and 256-token cap produce many invalid outputs; this is partly a protocol-adherence result and partly an evaluation limitation. Multiple-choice format also anchors answers to a small set, so its high $\kappa$ should not be compared directly with free response. Finally, vote share has only a few levels, which is why we emphasize Brier, AURC, and paired intervals instead of relying on ECE.
+
+\section{Conclusion}
 
 Within those bounds, the result is clear. Quantization can change what panel agreement means, but the change is not a single rise in ``false consensus.'' In our setup it appears mainly as lower accuracy, a heavier all-wrong tail, more invalid structured answers, and weaker selective reliability. Keeping failure incidence separate from failure concentration gives a simpler and more honest audit of compressed LLM panels.
 
