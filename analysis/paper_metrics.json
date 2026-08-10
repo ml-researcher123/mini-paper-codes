@@ -77,22 +77,22 @@
       "valid_cofailure_count": 152
     },
     {
-      "agreement_aurc": 0.19501124985120988,
-      "agreement_brier": 0.11326666666666668,
-      "beta_all_agents_wrong": 0.3933333333333333,
-      "cofailure_count": 118,
+      "agreement_aurc": 0.1967513865842084,
+      "agreement_brier": 0.11386666666666666,
+      "beta_all_agents_wrong": 0.4,
+      "cofailure_count": 120,
       "dataset": "gsm8k",
-      "individual_accuracy": 0.33533333333333337,
-      "invalid_answer_rate": 0.6326666666666667,
+      "individual_accuracy": 0.3333333333333333,
+      "invalid_answer_rate": 0.6313333333333333,
       "kappa_same_wrong_given_all_wrong": 0.0,
       "kappa_same_wrong_given_valid_all_wrong": null,
       "model": "microsoft/Phi-3.5-mini-instruct",
-      "panel_accuracy": 0.475,
+      "panel_accuracy": 0.47400000000000003,
       "precision": "fp16",
       "questions": 300,
       "same_wrong_all_rate": 0.0,
       "same_wrong_count": 0,
-      "source_file": "results/2026-08-09-phi-nf4-gsm-v6/microsoft_Phi-3.5-mini-instruct__fp16__gsm8k.jsonl",
+      "source_file": "results/2026-08-09-phi-fp16-gsm-clean-v8/microsoft_Phi-3.5-mini-instruct__fp16__gsm8k.jsonl",
       "valid_cofailure_count": 0
     },
     {
@@ -159,9 +159,9 @@
       "chance_adjusted_kappa": {
         "ci95_high": 0.07349477223536556,
         "ci95_low": -0.04551296051957002,
-        "delta_excess_nf4_minus_fp16": 0.012055234320488384,
+        "delta_excess_nf4_minus_fp16": 0.012055234320488273,
         "fp16_excess": 0.8838807129081266,
-        "nf4_excess": 0.895935947228615,
+        "nf4_excess": 0.8959359472286149,
         "valid_bootstrap_replicates": 10000
       },
       "dataset": "truthful_qa_mc1",
@@ -535,33 +535,33 @@
       "dataset": "gsm8k",
       "metrics": {
         "agreement_aurc": {
-          "ci95_high": 0.11432876340225943,
-          "ci95_low": 0.025200006880326004,
-          "delta_nf4_minus_fp16": 0.06866190055330246,
+          "ci95_high": 0.11139345745425543,
+          "ci95_low": 0.023791006103977608,
+          "delta_nf4_minus_fp16": 0.06692176382030393,
           "valid_bootstrap_replicates": 10000
         },
         "agreement_brier": {
-          "ci95_high": 0.029066666666666657,
-          "ci95_low": -0.0029333333333333438,
-          "delta_nf4_minus_fp16": 0.013000000000000012,
+          "ci95_high": 0.02853333333333334,
+          "ci95_low": -0.00360000000000002,
+          "delta_nf4_minus_fp16": 0.012400000000000008,
           "valid_bootstrap_replicates": 10000
         },
         "beta_all_agents_wrong": {
-          "ci95_high": 0.10999999999999999,
-          "ci95_low": 0.006666666666666654,
-          "delta_nf4_minus_fp16": 0.0566666666666667,
+          "ci95_high": 0.10333333333333333,
+          "ci95_low": 0.0,
+          "delta_nf4_minus_fp16": 0.04999999999999999,
           "valid_bootstrap_replicates": 10000
         },
         "individual_accuracy": {
-          "ci95_high": -0.042666666666666686,
-          "ci95_low": -0.09933333333333327,
-          "delta_nf4_minus_fp16": -0.07066666666666671,
+          "ci95_high": -0.04133333333333339,
+          "ci95_low": -0.09666666666666662,
+          "delta_nf4_minus_fp16": -0.06866666666666665,
           "valid_bootstrap_replicates": 10000
         },
         "invalid_answer_rate": {
-          "ci95_high": 0.10399999999999976,
-          "ci95_low": 0.04399999999999993,
-          "delta_nf4_minus_fp16": 0.07333333333333325,
+          "ci95_high": 0.10466666666666669,
+          "ci95_low": 0.04533333333333334,
+          "delta_nf4_minus_fp16": 0.07466666666666666,
           "valid_bootstrap_replicates": 10000
         },
         "kappa_same_wrong_given_all_wrong": {
@@ -577,9 +577,9 @@
           "valid_bootstrap_replicates": 0
         },
         "panel_accuracy": {
-          "ci95_high": -0.02233333333333326,
-          "ci95_low": -0.10799999999999998,
-          "delta_nf4_minus_fp16": -0.06433333333333335,
+          "ci95_high": -0.02133333333333337,
+          "ci95_low": -0.10599999999999998,
+          "delta_nf4_minus_fp16": -0.06333333333333335,
           "valid_bootstrap_replicates": 10000
         },
         "same_wrong_all_rate": {
@@ -593,7 +593,7 @@
       "paired_complete_parse": {
         "metrics": {
           "agreement_aurc": {
-            "ci95_high": 0.04226190476190477,
+            "ci95_high": 0.04303571428571428,
             "ci95_low": 0.0,
             "delta_nf4_minus_fp16": 0.008928571428571428,
             "valid_bootstrap_replicates": 10000
