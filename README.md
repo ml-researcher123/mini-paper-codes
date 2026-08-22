@@ -14,6 +14,11 @@ notebook workers, or polling infrastructure.
 - `analysis/analyze_results.py`: aggregation, tie-aware panel metrics, and
   10,000-replicate paired question bootstrap.
 - `analysis/paper_metrics.{csv,json}`: the reported statistics and intervals.
+- `analysis/gsm8k_parser_sensitivity.py`: relaxed-parser GSM8K sensitivity
+  analysis that preserves explicit final answers and applies a last-number
+  fallback only to otherwise invalid responses.
+- `analysis/gsm8k_parser_sensitivity.{csv,json}`: the sensitivity estimates
+  and 10,000-replicate paired bootstrap intervals reported in the appendix.
 - `provenance/environments.json`: package and CUDA versions for the final runs.
 
 The study uses Qwen2.5-3B-Instruct and Phi-3.5-mini-instruct, five independently
@@ -27,14 +32,16 @@ runner to revision `2fe192450127e6a83f7441aef6e3ca586c338b77`.
 ```bash
 python -m pip install -r requirements.txt
 python analysis/analyze_results.py
+python analysis/gsm8k_parser_sensitivity.py
 ```
 
-The second command overwrites `analysis/paper_metrics.csv` and
-`analysis/paper_metrics.json`. The default analysis uses 10,000 bootstrap
-replicates and may take a few minutes. A quick integrity check can use:
+These commands overwrite the corresponding CSV and JSON files in `analysis/`.
+The default analyses use 10,000 bootstrap replicates and may take a few
+minutes. Quick integrity checks can use:
 
 ```bash
 python analysis/analyze_results.py --bootstrap-replicates 100
+python analysis/gsm8k_parser_sensitivity.py --bootstrap-replicates 100
 ```
 
 ## Rerun inference
